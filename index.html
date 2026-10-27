@@ -972,7 +972,8 @@
     set('tk-when', when);
     set('tk-entrance', answers.entrance);
     var foodText = answers.food === '都可以' ? '都可以我就是個沒主見的呆瓜' : answers.food;
-    set('tk-food', answers.food ? (FOOD_ICON[answers.food] || '') + ' ' + foodText : '');
+    var foodIcon = answers.food === '都可以' ? '' : (FOOD_ICON[answers.food] || '') + ' ';
+    set('tk-food', answers.food ? foodIcon + foodText : '');
     set('tk-quiz', answers.quizPassed ? QUIZ.length + ' / ' + QUIZ.length + ' 全對 💯' : '');
     // 門票標題用瑋寶取的行動代號
     document.getElementById('t-next').textContent = answers.codename || '瑋寶第一次見網友大作戰';
