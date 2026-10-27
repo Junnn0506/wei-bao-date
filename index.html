@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { margin: 0; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<title>瑋寶第一次見網友大作戰</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+  /* 版面：單一手機畫面，一次一關，像遊戲任務卡；粉色泡泡背景＋蓬蓬雲朵吉祥物 */
+  :root {
+    --bg: #F8D3CB;          /* 蜜桃粉底色 */
+    --bg-deep: #F2BDB3;
+    --card: #FFF8F5;        /* 奶白卡片 */
+    --ink: #6E5257;         /* 可可灰字 */
+    --ink-soft: #9C7F84;
+    --wheat: #E8B04B;       /* 麥穗金 */
+    --wheat-deep: #C98A2B;
+    --berry: #E46A7C;       /* 主按鈕草莓粉 */
+    --berry-deep: #C9505F;
+    --font-display: "Huninn", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    --font-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    color-scheme: light;
+  }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+  }
+
+  /* 背景泡泡與星光 */
+  .sky { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0;
+    background: radial-gradient(120% 80% at 50% 0%, #FBE1DA 0%, var(--bg) 55%, var(--bg-deep) 100%); }
+  .bubble { position: absolute; border-radius: 50%;
+    border: 6px solid rgba(255,255,255,.55);
+    box-shadow: 0 0 18px rgba(255,255,255,.6), inset 0 0 18px rgba(255,255,255,.5);
+    animation: drift 14s ease-in-out infinite alternate; }
+  .bubble.fill { border: none; background: rgba(255,255,255,.55); box-shadow: 0 0 20px rgba(255,255,255,.8); }
+  .spark { position: absolute; width: 18px; height: 18px; animation: twinkle 3s ease-in-out infinite; }
+  .spark::before { content: ""; position: absolute; inset: 0; background: #fff;
+    clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+    filter: drop-shadow(0 0 4px rgba(228,106,124,.6)); }
+  @keyframes drift { to { transform: translate(14px, -22px); } }
+  @keyframes twinkle { 0%,100% { opacity: .35; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.1); } }
+
+  main {
+    position: relative; z-index: 1;
+    min-height: 100%;
+    display: grid; place-items: center;
+    padding-block: 28px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    box-sizing: border-box;
+  }
+
+  .screen { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
+  .screen[hidden] { display: none !important; }
+  .screen.enter { animation: pop .5s cubic-bezier(.2,.9,.3,1.3); }
+  @keyframes pop { from { opacity: .3; transform: translateY(14px) scale(.97); } to { opacity: 1; transform: none; } }
+
+  .mascot { width: min(260px, 70vw); max-width: 100%; height: auto; animation: bob 3.2s ease-in-out infinite; filter: drop-shadow(0 8px 14px rgba(201,80,95,.18)); }
+  @keyframes bob { 50% { transform: translateY(-8px) rotate(-1.5deg); } }
+
+  .card {
+    width: 100%; box-sizing: border-box;
+    background: var(--card);
+    border-radius: 28px;
+    padding: 26px 22px 24px;
+    box-shadow: 0 10px 0 var(--bg-deep), 0 18px 30px rgba(201,80,95,.15);
+    display: flex; flex-direction: column; gap: 14px; align-items: center;
+  }
+  .eyebrow { font-family: var(--font-display); font-size: 13px; letter-spacing: .18em; color: var(--berry); }
+  h1 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(26px, 7.4vw, 32px); line-height: 1.3; text-wrap: balance; color: var(--ink); }
+  h1 .name { color: var(--berry); }
+
+  .quest {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #FDEBE6; border: 2px dashed #EFB3A8; border-radius: 999px;
+    padding: 8px 16px; font-size: 15px; color: var(--ink);
+  }
+  .quest .count { font-family: var(--font-display); font-variant-numeric: tabular-nums; color: var(--wheat-deep);
+    background: #fff; border-radius: 999px; padding: 1px 10px; border: 1.5px solid #F3D7A0; }
+
+  .buttons { display: flex; gap: 12px; width: 100%; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
+  .btn {
+    font-family: var(--font-display); font-size: 19px;
+    border: none; border-radius: 999px; padding: 14px 22px; cursor: pointer;
+    flex: 1 1 130px; min-height: 54px;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:focus-visible { outline: 3px solid var(--wheat); outline-offset: 3px; }
+  .btn-go { background: var(--berry); color: #fff; box-shadow: 0 5px 0 var(--berry-deep); }
+  .btn-shy { background: #fff; color: var(--ink); box-shadow: 0 5px 0 #E7C9C3; border: 2px solid #F0D3CD; }
+  .btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--berry-deep); }
+  .btn-shy:active { box-shadow: 0 1px 0 #E7C9C3; }
+
+  /* 戴面具小遊戲 */
+  .stage { position: relative; width: 100%; max-width: 320px; aspect-ratio: 100 / 64; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .stage img { position: absolute; -webkit-user-drag: none; user-select: none; }
+  .stage .head { left: 4%; top: 0; width: 58%; height: auto; filter: drop-shadow(0 6px 10px rgba(110,82,87,.18)); }
+  .stage .mask {
+    left: 66%; top: 6%; width: 32%; height: auto; cursor: grab; touch-action: none;
+    filter: drop-shadow(0 6px 8px rgba(110,82,87,.25));
+    animation: wiggle 2.4s ease-in-out infinite; transform-origin: 50% 60%;
+    transition: left .25s ease, top .25s ease, width .25s ease;
+  }
+  .stage .mask.dragging { cursor: grabbing; animation: none; transition: none; transform: scale(1.06); }
+  .stage .mask.on { animation: none; }
+  .stage .mask.snap { animation: squish .45s ease; }
+  @keyframes wiggle { 0%, 70%, 100% { transform: rotate(0); } 76% { transform: rotate(-7deg); } 84% { transform: rotate(6deg); } 92% { transform: rotate(-3deg); } }
+  @keyframes squish { 0% { transform: scale(1.12); } 50% { transform: scale(.94, 1.04); } 100% { transform: scale(1); } }
+  .stage .mask:focus-visible { outline: 3px solid var(--wheat); outline-offset: 2px; border-radius: 12px; }
+
+  /* 呼吸頁 */
+  .calm-text { margin: 0; font-size: 16px; line-height: 1.8; color: var(--ink); }
+  .breath {
+    position: relative; width: 220px; height: 220px; max-width: 100%;
+    display: grid; place-items: center; margin: 6px 0;
+  }
+  .breath .ring { position: absolute; inset: 0; border-radius: 50%; border: 2px dashed #F0C2B8; }
+  .breath .ball {
+    width: 120px; height: 120px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff 0%, #FFE9E3 45%, #F9C9BE 100%);
+    box-shadow: 0 0 0 10px rgba(255,255,255,.55), 0 10px 26px rgba(201,80,95,.22);
+    display: grid; place-items: center;
+    will-change: transform;
+  }
+  .breath .label { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 2px; pointer-events: none; }
+  .breath .phase { font-family: var(--font-display); font-size: 24px; color: var(--berry-deep); }
+  .breath .secs { font-family: var(--font-display); font-size: 15px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .ratio { display: flex; width: 100%; max-width: 280px; height: 30px; border-radius: 999px; overflow: hidden; font-size: 13px; font-weight: 700; color: #fff; }
+  .ratio span { display: grid; place-items: center; transition: filter .3s; }
+  .ratio .in { flex: 1; background: #F08A5D; }
+  .ratio .out { flex: 2; background: #6FBCE6; }
+  .ratio span.dim { filter: saturate(.35) brightness(1.12); }
+  .hint { font-size: 13px; color: var(--ink-soft); margin: 0; }
+
+  /* 第二頁：期待值 */
+  .hope-face { font-size: 76px; line-height: 1; height: 84px; display: grid; place-items: center; }
+  .hope-face.bump { animation: bump .35s cubic-bezier(.2,.9,.3,1.5); }
+  @keyframes bump { 0% { transform: scale(.6) rotate(-10deg); } 100% { transform: scale(1) rotate(0); } }
+  .hope-value { font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--berry); font-variant-numeric: tabular-nums; }
+  .hope-value small { font-size: 20px; margin-left: 2px; }
+  .hope-text { margin: 0; font-family: var(--font-display); font-size: 20px; min-height: 2.8em; display: grid; place-items: center; line-height: 1.4; color: var(--ink); text-wrap: balance; }
+  .slider-wrap { width: 100%; display: flex; flex-direction: column; gap: 6px; }
+  .slider-scale { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-soft); font-variant-numeric: tabular-nums; padding: 0 4px; }
+  #hope {
+    --pct: 50%;
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 48px; margin: 0; background: transparent; cursor: pointer; touch-action: pan-y;
+  }
+  #hope:focus-visible { outline: 3px solid var(--wheat); outline-offset: 2px; border-radius: 999px; }
+  #hope::-webkit-slider-runnable-track {
+    height: 16px; border-radius: 999px;
+    background: linear-gradient(90deg, #F7A3AF, var(--berry)) 0 0 / var(--pct) 100% no-repeat, #F6DCD6;
+    box-shadow: inset 0 2px 3px rgba(110,82,87,.12);
+  }
+  #hope::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 40px; height: 40px; margin-top: -12px; border: none; border-radius: 50%;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23E46A7C' d='M12 21s-7.5-4.6-9.6-9.2C1 8.6 3 5 6.6 5c2.1 0 3.5 1.2 5.4 3.2C13.9 6.2 15.3 5 17.4 5 21 5 23 8.6 21.6 11.8 19.5 16.4 12 21 12 21z'/%3E%3C/svg%3E") center / 24px no-repeat;
+    box-shadow: 0 3px 0 var(--berry-deep), 0 6px 12px rgba(201,80,95,.3);
+  }
+  #hope::-moz-range-track { height: 16px; border-radius: 999px; background: #F6DCD6; }
+  #hope::-moz-range-progress { height: 16px; border-radius: 999px; background: linear-gradient(90deg, #F7A3AF, var(--berry)); }
+  #hope::-moz-range-thumb {
+    width: 40px; height: 40px; border: none; border-radius: 50%;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23E46A7C' d='M12 21s-7.5-4.6-9.6-9.2C1 8.6 3 5 6.6 5c2.1 0 3.5 1.2 5.4 3.2C13.9 6.2 15.3 5 17.4 5 21 5 23 8.6 21.6 11.8 19.5 16.4 12 21 12 21z'/%3E%3C/svg%3E") center / 24px no-repeat;
+    box-shadow: 0 3px 0 var(--berry-deep), 0 6px 12px rgba(201,80,95,.3);
+  }
+
+  /* 第二頁：活動選項 */
+  .pick-label { margin: 6px 0 0; font-family: var(--font-display); font-size: 17px; color: var(--ink); }
+  .chips { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+  .chip {
+    font-family: var(--font-display); font-size: 17px; color: var(--ink);
+    background: #fff; border: 2px solid #F0D3CD; border-radius: 18px;
+    padding: 12px 8px; min-height: 52px; cursor: pointer;
+    box-shadow: 0 4px 0 #EFD6D0;
+    transition: transform .12s ease, background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .chip:focus-visible { outline: 3px solid var(--wheat); outline-offset: 2px; }
+  .chip:active { transform: translateY(3px); box-shadow: 0 1px 0 #EFD6D0; }
+  .chip[aria-pressed="true"] { background: var(--berry); border-color: var(--berry); color: #fff; box-shadow: 0 4px 0 var(--berry-deep); }
+  .chips.shake { animation: shake .4s ease; }
+  @keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+
+  /* 第三頁：出發時間 */
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+  .fields.shake { animation: shake .4s ease; }
+  .field { display: flex; flex-direction: column; gap: 6px; text-align: left; min-width: 0; }
+  .field label { font-family: var(--font-display); font-size: 16px; color: var(--ink); padding-left: 4px; }
+  .field input {
+    font-family: var(--font-display); font-size: 17px; color: var(--ink);
+    background: #fff; border: 2px solid #F0D3CD; border-radius: 16px;
+    padding: 12px 10px; min-height: 52px; width: 100%; box-sizing: border-box; min-width: 0;
+    box-shadow: 0 4px 0 #EFD6D0; -webkit-appearance: none; appearance: none;
+  }
+  .field-wide { width: 100%; }
+  .field-wide.shake { animation: shake .4s ease; }
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: ""; position: absolute; right: 16px; top: 50%; width: 10px; height: 10px; margin-top: -8px;
+    border-right: 3px solid var(--berry); border-bottom: 3px solid var(--berry); transform: rotate(45deg); pointer-events: none;
+  }
+  .field select {
+    font-family: var(--font-display); font-size: 17px; color: var(--ink);
+    background: #fff; border: 2px solid #F0D3CD; border-radius: 16px;
+    padding: 12px 42px 12px 14px; min-height: 52px; width: 100%; box-sizing: border-box;
+    box-shadow: 0 4px 0 #EFD6D0; -webkit-appearance: none; appearance: none; cursor: pointer;
+  }
+  .field select:invalid, .field select.empty { color: var(--ink-soft); }
+  .field select:focus { outline: none; border-color: var(--berry); }
+  .field select:focus-visible { outline: 3px solid var(--wheat); outline-offset: 2px; }
+  .field input:focus { outline: none; border-color: var(--berry); }
+  .field input:focus-visible { outline: 3px solid var(--wheat); outline-offset: 2px; }
+  .when {
+    width: 100%; box-sizing: border-box; margin: 4px 0 0;
+    background: #FDEBE6; border: 2px dashed #EFB3A8; border-radius: 18px;
+    padding: 14px 12px; font-family: var(--font-display); font-size: 19px; color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .when.ready { color: var(--berry-deep); }
+
+  /* 第四頁：九宮格食物 */
+  .food-grid { grid-template-columns: repeat(3, 1fr); gap: 9px; }
+  .food-grid .chip { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 15px; padding: 10px 4px; min-width: 0; }
+  .food-grid .ico { font-size: 30px; line-height: 1; }
+
+  /* 第五頁：通關小測驗 */
+  .quiz-body, .quiz-pass { width: 100%; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  .quiz-body[hidden], .quiz-pass[hidden] { display: none !important; }
+  .quiz-progress { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .dots { display: inline-flex; gap: 6px; }
+  .dots i { width: 9px; height: 9px; border-radius: 50%; background: #F3D9D3; }
+  .dots i.now { background: var(--berry); }
+  .dots i.done { background: var(--wheat); }
+  .quiz-q { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: 1.4; color: var(--ink); text-wrap: balance; }
+  .quiz-opts { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt {
+    display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+    font-family: var(--font-display); font-size: 19px; color: var(--ink); font-variant-numeric: tabular-nums;
+    background: #fff; border: 2px solid #F0D3CD; border-radius: 18px; padding: 10px 14px; min-height: 54px; cursor: pointer;
+    box-shadow: 0 4px 0 #EFD6D0; transition: background .15s, border-color .15s, color .15s, opacity .15s;
+  }
+  .quiz-opt .letter {
+    flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+    background: #FDEBE6; color: var(--berry-deep); font-size: 15px;
+  }
+  .quiz-opt:focus-visible { outline: 3px solid var(--wheat); outline-offset: 2px; }
+  .quiz-opt.right { background: var(--berry); border-color: var(--berry); color: #fff; box-shadow: 0 4px 0 var(--berry-deep); }
+  .quiz-opt.right .letter { background: #fff; }
+  .quiz-opt.wrong { opacity: .45; text-decoration: line-through; cursor: not-allowed; }
+  .quiz-opt.shake { animation: shake .4s ease; }
+  .quiz-msg { margin: 0; min-height: 1.6em; font-family: var(--font-display); font-size: 17px; }
+  .quiz-msg.bad { color: var(--berry-deep); font-size: 22px; }
+  .quiz-msg.pop { animation: bump .4s cubic-bezier(.2,.9,.3,1.5); }
+  .quiz-msg.ok { color: var(--berry-deep); }
+  .pass-badge { font-size: 64px; line-height: 1; animation: bump .5s cubic-bezier(.2,.9,.3,1.5); }
+  .pass-title { margin: 0; font-family: var(--font-display); font-size: 26px; color: var(--berry-deep); }
+  .loading-dots i { font-style: normal; animation: blink 1.2s infinite; }
+  .loading-dots i:nth-child(2) { animation-delay: .2s; }
+  .loading-dots i:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+
+  /* 上一頁按鈕（固定在左上角） */
+  .card { position: relative; }
+  .card.pad-top { padding-top: 58px; }
+  .prev {
+    position: absolute; z-index: 2; top: 14px; left: 14px;
+    display: inline-flex; align-items: center; gap: 2px;
+    font-family: var(--font-display); font-size: 14px; color: var(--berry-deep);
+    background: #fff; border: 2px solid #F0D3CD; border-radius: 999px;
+    padding: 5px 12px 5px 6px; cursor: pointer;
+    box-shadow: 0 3px 0 #EFD6D0;
+    transition: transform .12s ease;
+  }
+  .prev svg { width: 16px; height: 16px; }
+  .prev:active { transform: translateY(2px); box-shadow: 0 1px 0 #EFD6D0; }
+  .prev:focus-visible { outline: 3px solid var(--wheat); outline-offset: 2px; }
+
+  /* 下一關佔位 */
+  .soon { font-size: 15px; color: var(--ink-soft); margin: 0; line-height: 1.7; }
+
+  /* 第六頁：行動代號 */
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .code-field { position: relative; }
+  .code-field input { text-align: center; font-size: 20px; padding-right: 64px; padding-left: 64px; }
+  .code-count { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; pointer-events: none; }
+
+  /* 最後：約會門票（奶白票券＋撕票線＋麥穗金） */
+  .ticket-hello { margin: 0; font-family: var(--font-display); font-size: 20px; color: var(--berry-deep); }
+  .ticket {
+    position: relative; width: 100%;
+    display: grid; grid-template-columns: 1fr 92px;
+    filter: drop-shadow(0 8px 0 var(--bg-deep)) drop-shadow(0 16px 22px rgba(201,80,95,.18));
+    animation: ticket-in .7s cubic-bezier(.2,.9,.3,1.25);
+    text-align: left;
+  }
+  @keyframes ticket-in { from { transform: translateY(24px) rotate(-3deg) scale(.94); opacity: .2; } to { transform: none; opacity: 1; } }
+  .ticket-main, .ticket-stub {
+    background-color: var(--card);
+    background-image: radial-gradient(rgba(232,176,75,.16) 1.4px, transparent 1.6px);
+    background-size: 14px 14px;
+  }
+  /* 主票：右側兩個半圓缺口 */
+  .ticket-main {
+    border-radius: 24px 0 0 24px; padding: 18px 16px 18px 18px; min-width: 0;
+    display: flex; flex-direction: column; gap: 10px;
+    -webkit-mask: radial-gradient(circle 12px at 100% 0, transparent 11.5px, #000 12px) top / 100% 51% no-repeat,
+                  radial-gradient(circle 12px at 100% 100%, transparent 11.5px, #000 12px) bottom / 100% 51% no-repeat;
+            mask: radial-gradient(circle 12px at 100% 0, transparent 11.5px, #000 12px) top / 100% 51% no-repeat,
+                  radial-gradient(circle 12px at 100% 100%, transparent 11.5px, #000 12px) bottom / 100% 51% no-repeat;
+  }
+  /* 票根：左側半圓缺口＋虛線撕票線 */
+  .ticket-stub {
+    position: relative; border-radius: 0 24px 24px 0; padding: 18px 8px;
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 10px;
+    -webkit-mask: radial-gradient(circle 12px at 0 0, transparent 11.5px, #000 12px) top / 100% 51% no-repeat,
+                  radial-gradient(circle 12px at 0 100%, transparent 11.5px, #000 12px) bottom / 100% 51% no-repeat;
+            mask: radial-gradient(circle 12px at 0 0, transparent 11.5px, #000 12px) top / 100% 51% no-repeat,
+                  radial-gradient(circle 12px at 0 100%, transparent 11.5px, #000 12px) bottom / 100% 51% no-repeat;
+  }
+  .ticket-stub::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; border-left: 2.5px dashed #EBC0B6; }
+  .ticket-stub img { width: 80px; height: auto; max-width: 100%; }
+  .stub-text { display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: var(--font-display); font-size: 12px; letter-spacing: .08em; color: var(--ink-soft); writing-mode: vertical-rl; }
+  .stub-to { color: var(--berry-deep); }
+  .wheat-row { display: flex; gap: 2px; }
+
+  .ticket-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .admit { font-family: var(--font-display); font-size: 12px; letter-spacing: .2em; color: #fff; background: var(--berry); border-radius: 999px; padding: 3px 10px; }
+  .ticket-no { font-family: var(--font-display); font-size: 13px; color: var(--wheat-deep); font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+  .ticket-title { font-size: clamp(21px, 6vw, 25px); text-align: left; }
+  .ticket-quest { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 14px; color: var(--ink); }
+  .ticket-quest b { font-family: var(--font-display); font-weight: 400; color: var(--wheat-deep); }
+  .stamp-ok {
+    font-family: var(--font-display); font-size: 13px; color: var(--berry-deep);
+    border: 2px solid var(--berry); border-radius: 8px; padding: 1px 7px; transform: rotate(-6deg); display: inline-block;
+  }
+  .ticket-rows { margin: 2px 0 0; display: flex; flex-direction: column; border-top: 2px dashed #F0D3CD; }
+  .ticket-rows .row { display: grid; grid-template-columns: 4.6em 1fr; gap: 8px; align-items: baseline; padding: 8px 0; border-bottom: 1.5px dotted #F0D3CD; }
+  .ticket-rows dt { font-size: 12.5px; color: var(--ink-soft); letter-spacing: .04em; }
+  .ticket-rows dd { margin: 0; font-family: var(--font-display); font-size: 16px; color: var(--ink); line-height: 1.4; min-width: 0; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+  .ticket-tip { margin: 0; font-size: 14px; color: var(--ink-soft); }
+  .ticket-buttons { max-width: 240px; }
+  .ticket-shot { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+
+  /* 截圖時用的版本：html2canvas 不支援 mask 和直書，改用圓點做缺口、票根文字改橫排 */
+  .ticket-shot.capturing { background: var(--bg); padding: 22px 18px 30px; box-sizing: border-box; }
+  .capturing .ticket { animation: none; filter: none; }
+  .capturing .ticket-main, .capturing .ticket-stub { -webkit-mask: none; mask: none; }
+  .capturing .ticket::before, .capturing .ticket::after {
+    content: ""; position: absolute; left: calc(100% - 92px); width: 24px; height: 24px; margin-left: -12px;
+    border-radius: 50%; background: var(--bg); z-index: 1;
+  }
+  .capturing .ticket::before { top: -12px; }
+  .capturing .ticket::after { bottom: -12px; }
+  .capturing .stub-text { writing-mode: horizontal-tb; }
+
+  .shot-modal {
+    position: fixed; inset: 0; z-index: 20; display: grid; place-items: center;
+    background: rgba(110, 82, 87, .55);
+    padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+    box-sizing: border-box;
+  }
+  .shot-modal[hidden] { display: none !important; }
+  .shot-panel {
+    width: 100%; max-width: 380px; max-height: 100%; overflow-y: auto; box-sizing: border-box;
+    background: var(--card); border-radius: 24px; padding: 16px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    animation: pop .35s cubic-bezier(.2,.9,.3,1.3);
+  }
+  .shot-panel img { width: 100%; height: auto; border-radius: 14px; box-shadow: 0 6px 16px rgba(201,80,95,.2); -webkit-touch-callout: default; user-select: auto; }
+  .shot-tip { margin: 0; font-family: var(--font-display); font-size: 16px; color: var(--ink); }
+  .shot-panel .btn { flex: none; width: 160px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mascot, .bubble, .spark, .screen.enter { animation: none; }
+  }
+</style>
+
+<div class="sky" aria-hidden="true">
+  <div class="bubble" style="width:180px;height:180px;left:-50px;top:4%"></div>
+  <div class="bubble" style="width:110px;height:110px;right:-20px;top:16%;animation-delay:-4s"></div>
+  <div class="bubble fill" style="width:60px;height:60px;left:62%;top:6%;animation-delay:-2s"></div>
+  <div class="bubble" style="width:150px;height:150px;right:-40px;bottom:6%;animation-delay:-7s"></div>
+  <div class="bubble fill" style="width:44px;height:44px;left:8%;bottom:22%;animation-delay:-5s"></div>
+  <div class="bubble" style="width:90px;height:90px;left:12%;bottom:-20px;animation-delay:-9s"></div>
+  <div class="spark" style="left:14%;top:12%"></div>
+  <div class="spark" style="right:18%;top:30%;animation-delay:-1s"></div>
+  <div class="spark" style="left:8%;top:52%;animation-delay:-2s;width:12px;height:12px"></div>
+  <div class="spark" style="right:10%;bottom:30%;animation-delay:-.5s"></div>
+  <div class="spark" style="left:40%;bottom:8%;animation-delay:-1.6s;width:12px;height:12px"></div>
+</div>
+
+<button class="prev" id="btn-prev" type="button" hidden aria-label="上一頁">
+  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <span>上一頁</span>
+</button>
+
+<main>
+  <!-- 第一頁：開場 -->
+  <section class="screen" id="screen-start" aria-labelledby="t-start">
+    <img class="mascot" src="mascot.png" width="517" height="387" alt="抱著愛心的小麥粉精靈">
+
+    <div class="card">
+      <div class="eyebrow">MISSION 001</div>
+      <h1 id="t-start"><span class="name">瑋寶</span>第一次見網友<br>大作戰</h1>
+      <div class="quest">任務：見一次網友 <span class="count">0/1</span></div>
+      <div class="buttons">
+        <button class="btn btn-go" id="btn-go" type="button">出發！</button>
+        <button class="btn btn-shy" id="btn-nervous" type="button">好緊張！</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 好緊張頁：深呼吸 -->
+  <section class="screen" id="screen-calm" hidden aria-labelledby="t-calm">
+    <div class="card">
+      <h1 id="t-calm">緊張可以幫我戴面具</h1>
+      <div class="stage" id="stage">
+        <img class="head" id="head" src="head.png" width="503" height="520" alt="我的頭" draggable="false">
+        <img class="mask" id="mask" src="mask.png" width="293" height="420" alt="面具，可以拖到我臉上" draggable="false" tabindex="0" role="button">
+      </div>
+      <div class="breath" aria-live="polite">
+        <div class="ring"></div>
+        <div class="ball" id="ball"></div>
+        <div class="label"><span class="phase" id="phase">吸氣</span><span class="secs" id="secs">4</span></div>
+      </div>
+      <div class="ratio" aria-label="吸氣與吐氣的時間比例是一比二">
+        <span class="in" id="r-in">吸氣 4 秒</span><span class="out" id="r-out">吐氣 8 秒</span>
+      </div>
+      <div class="buttons">
+        <button class="btn btn-go" id="btn-calm-go" type="button">好啦，出發！</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第二頁：妳的期待值 -->
+  <section class="screen" id="screen-hope" hidden aria-labelledby="t-hope">
+    <div class="card">
+      <div class="eyebrow">MISSION 002</div>
+      <h1 id="t-hope">妳的期待值</h1>
+      <div class="hope-face" id="hope-face" aria-hidden="true">😐</div>
+      <div class="hope-value"><span id="hope-num">50</span><small>%</small></div>
+      <p class="hope-text" id="hope-text" aria-live="polite">感覺還好</p>
+      <div class="slider-wrap">
+        <input type="range" id="hope" min="0" max="100" step="1" value="50" aria-labelledby="t-hope" aria-describedby="hope-text">
+        <div class="slider-scale" aria-hidden="true"><span>0</span><span>100</span></div>
+      </div>
+      <p class="pick-label" id="pick-label">想做什麼？</p>
+      <div class="chips" id="chips" role="group" aria-labelledby="pick-label">
+        <button class="chip" type="button" aria-pressed="false" data-v="看電影">看電影</button>
+        <button class="chip" type="button" aria-pressed="false" data-v="吃飯散步">吃飯散步</button>
+        <button class="chip" type="button" data-joke="最好是有那麼認真">健身房😈</button>
+        <button class="chip" type="button" data-joke="好奇寶寶喔？">????</button>
+      </div>
+      <div class="buttons">
+        <button class="btn btn-go" id="btn-hope-go" type="button">下一關</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第三頁：選擇出發時間 -->
+  <section class="screen" id="screen-time" hidden aria-labelledby="t-time">
+    <div class="card">
+      <div class="eyebrow">MISSION 003</div>
+      <h1 id="t-time">選擇出發時間</h1>
+      <div class="fields" id="fields">
+        <div class="field">
+          <label for="date">哪一天</label>
+          <input type="date" id="date">
+        </div>
+        <div class="field">
+          <label for="time">幾點</label>
+          <input type="time" id="time" step="900">
+        </div>
+      </div>
+      <div class="field field-wide">
+        <label for="entrance">請選擇出場方式</label>
+        <div class="select-wrap">
+          <select id="entrance">
+            <option value="" disabled selected>點我選擇</option>
+            <option>89社會搖花手進場</option>
+            <option>黑幫老大進場</option>
+            <option>換乘戀愛心動嘉賓進場</option>
+          </select>
+        </div>
+      </div>
+      <p class="when" id="when" aria-live="polite">選好日期和時間吧</p>
+      <div class="buttons">
+        <button class="btn btn-go" id="btn-time-go" type="button">下一關</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第四頁：想吃什麼 -->
+  <section class="screen" id="screen-food" hidden aria-labelledby="t-food">
+    <div class="card">
+      <div class="eyebrow">MISSION 004</div>
+      <h1 id="t-food">想吃什麼？</h1>
+      <div class="chips food-grid" id="foods" role="group" aria-labelledby="t-food">
+        <button class="chip" type="button" aria-pressed="false" data-v="義大利麵"><span class="ico" aria-hidden="true">🍝</span>義大利麵</button>
+        <button class="chip" type="button" aria-pressed="false" data-v="牛排"><span class="ico" aria-hidden="true">🥩</span>牛排</button>
+        <button class="chip" type="button" aria-pressed="false" data-v="牛肉麵"><span class="ico" aria-hidden="true">🍜</span>牛肉麵</button>
+        <button class="chip" type="button" aria-pressed="false" data-v="義式料理"><span class="ico" aria-hidden="true">🍕</span>義式料理</button>
+        <button class="chip" type="button" aria-pressed="false" data-v="泰國料理"><span class="ico" aria-hidden="true">🌶️</span>泰國料理</button>
+        <button class="chip" type="button" aria-pressed="false" data-v="印度料理"><span class="ico" aria-hidden="true">🍛</span>印度料理</button>
+        <button class="chip" type="button" aria-pressed="false" data-v="日式料理"><span class="ico" aria-hidden="true">🍣</span>日式料理</button>
+        <button class="chip" type="button" aria-pressed="false" data-v="韓式料理"><span class="ico" aria-hidden="true">🍲</span>韓式料理</button>
+        <button class="chip" type="button" aria-pressed="false" data-v="都可以"><span class="ico" aria-hidden="true">😋</span>都可以</button>
+      </div>
+      <div class="buttons">
+        <button class="btn btn-go" id="btn-food-go" type="button">下一關</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第五頁：通關小測驗 -->
+  <section class="screen" id="screen-quiz" hidden aria-labelledby="t-quiz">
+    <div class="card">
+      <div class="eyebrow">MISSION 005</div>
+      <h1 id="t-quiz">通關小測驗</h1>
+      <div class="quiz-body" id="quiz-body">
+        <div class="quiz-progress"><span id="quiz-step">第 1 / 1 題</span><span class="dots" id="quiz-dots" aria-hidden="true"></span></div>
+        <p class="quiz-q" id="quiz-q"></p>
+        <div class="quiz-opts" id="quiz-opts" role="group" aria-labelledby="quiz-q"></div>
+        <p class="quiz-msg" id="quiz-msg" aria-live="polite"></p>
+      </div>
+      <div class="quiz-pass" id="quiz-pass" hidden>
+        <div class="pass-badge" aria-hidden="true"></div>
+        <p class="pass-title">測驗通過！</p>
+        <p class="soon">前往最後一關<span class="loading-dots"><i>.</i><i>.</i><i>.</i></span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第六頁：行動代號 -->
+  <section class="screen" id="screen-code" hidden aria-labelledby="t-code">
+    <div class="card">
+      <div class="eyebrow">MISSION 006</div>
+      <h1 id="t-code">為這次見面<br>取個行動代號</h1>
+      <div class="field field-wide code-field" id="code-field">
+        <label for="codename" class="sr-only">行動代號</label>
+        <input type="text" id="codename" maxlength="20" autocomplete="off" enterkeyhint="done">
+        <span class="code-count" id="code-count" aria-hidden="true">0 / 20</span>
+      </div>
+      <div class="buttons">
+        <button class="btn btn-go" id="btn-code-go" type="button">生成門票</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 最後：約會門票 -->
+  <section class="screen" id="screen-next" hidden aria-labelledby="t-next">
+    <div class="ticket-shot" id="ticket-shot">
+    <p class="ticket-hello">門票生成成功✦</p>
+
+    <article class="ticket" aria-labelledby="t-next">
+      <div class="ticket-main">
+        <div class="ticket-top">
+          <span class="admit">ADMIT ONE</span>
+          <span class="ticket-no">No. 0001</span>
+        </div>
+        <h1 id="t-next" class="ticket-title"><span class="name">瑋寶</span>第一次見網友<br>大作戰</h1>
+        <div class="ticket-quest">任務：見一次網友 <b>0/1</b> <span class="stamp-ok">待完成</span></div>
+
+        <dl class="ticket-rows">
+          <div class="row"><dt>期待值</dt><dd id="tk-hope">—</dd></div>
+          <div class="row"><dt>想做什麼</dt><dd id="tk-activity">—</dd></div>
+          <div class="row"><dt>出發時間</dt><dd id="tk-when">—</dd></div>
+          <div class="row"><dt>出場方式</dt><dd id="tk-entrance">—</dd></div>
+          <div class="row"><dt>想吃什麼</dt><dd id="tk-food">—</dd></div>
+          <div class="row"><dt>通關測驗</dt><dd id="tk-quiz">—</dd></div>
+        </dl>
+      </div>
+
+      <div class="ticket-stub">
+        <img src="mascot.png" width="517" height="387" alt="">
+        <div class="stub-text">
+          <span class="stub-from">MADE BY</span>
+          <span class="stub-to">均寶</span>
+        </div>
+        <div class="wheat-row" aria-hidden="true">
+          <svg viewBox="0 0 24 60" width="14" height="36"><path d="M12 6v52" stroke="#C98A2B" stroke-width="2" stroke-linecap="round"/><g fill="#E8B04B" stroke="#C98A2B" stroke-width="1.2"><ellipse cx="7.5" cy="16" rx="4" ry="7" transform="rotate(-28 7.5 16)"/><ellipse cx="16.5" cy="16" rx="4" ry="7" transform="rotate(28 16.5 16)"/><ellipse cx="7.5" cy="28" rx="4" ry="7" transform="rotate(-28 7.5 28)"/><ellipse cx="16.5" cy="28" rx="4" ry="7" transform="rotate(28 16.5 28)"/><ellipse cx="7.5" cy="40" rx="4" ry="7" transform="rotate(-28 7.5 40)"/><ellipse cx="16.5" cy="40" rx="4" ry="7" transform="rotate(28 16.5 40)"/><ellipse cx="12" cy="6" rx="3.5" ry="6"/></g></svg>
+          <svg viewBox="0 0 24 60" width="14" height="36"><path d="M12 6v52" stroke="#C98A2B" stroke-width="2" stroke-linecap="round"/><g fill="#E8B04B" stroke="#C98A2B" stroke-width="1.2"><ellipse cx="7.5" cy="16" rx="4" ry="7" transform="rotate(-28 7.5 16)"/><ellipse cx="16.5" cy="16" rx="4" ry="7" transform="rotate(28 16.5 16)"/><ellipse cx="7.5" cy="28" rx="4" ry="7" transform="rotate(-28 7.5 28)"/><ellipse cx="16.5" cy="28" rx="4" ry="7" transform="rotate(28 16.5 28)"/><ellipse cx="7.5" cy="40" rx="4" ry="7" transform="rotate(-28 7.5 40)"/><ellipse cx="16.5" cy="40" rx="4" ry="7" transform="rotate(28 16.5 40)"/><ellipse cx="12" cy="6" rx="3.5" ry="6"/></g></svg>
+        </div>
+      </div>
+    </article>
+    </div>
+
+    <div class="buttons ticket-buttons">
+      <button class="btn btn-go" id="btn-shot" type="button">生成圖片</button>
+    </div>
+  </section>
+</main>
+
+<!-- 生成的門票圖片 -->
+<div class="shot-modal" id="shot-modal" hidden role="dialog" aria-modal="true" aria-label="門票圖片">
+  <div class="shot-panel">
+    <img id="shot-img" alt="約會門票圖片">
+    <p class="shot-tip">長按圖片即可儲存</p>
+    <button class="btn btn-shy" id="shot-close" type="button">關閉</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+(function () {
+  var screens = {
+    start: document.getElementById('screen-start'),
+    calm: document.getElementById('screen-calm'),
+    hope: document.getElementById('screen-hope'),
+    time: document.getElementById('screen-time'),
+    food: document.getElementById('screen-food'),
+    quiz: document.getElementById('screen-quiz'),
+    code: document.getElementById('screen-code'),
+    next: document.getElementById('screen-next')
+  };
+  var breathing = false, startTime = 0, rafId = 0;
+  var IN = 4, OUT = 8, CYCLE = IN + OUT;
+  var ball = document.getElementById('ball');
+  var phaseEl = document.getElementById('phase');
+  var secsEl = document.getElementById('secs');
+  var rIn = document.getElementById('r-in');
+  var rOut = document.getElementById('r-out');
+
+  var history = [], current = 'start';
+  var prevBtn = document.getElementById('btn-prev');
+  function show(name, isBack) {
+    if (!isBack && name !== current) history.push(current);
+    if (name === 'start') history = [];
+    current = name;
+    // 門票頁是終點，不放上一頁
+    prevBtn.hidden = history.length === 0 || name === 'next';
+    // 把上一頁按鈕放進目前這頁卡片的左上角；沒有 MISSION 小標的頁面多留一點上方空間
+    var card = screens[name].querySelector('.card');
+    if (card && !prevBtn.hidden) {
+      card.insertBefore(prevBtn, card.firstChild);
+      card.classList.toggle('pad-top', !card.querySelector(':scope > .eyebrow'));
+    }
+    Object.keys(screens).forEach(function (k) {
+      var el = screens[k];
+      el.hidden = k !== name;
+      el.classList.remove('enter');
+    });
+    void screens[name].offsetWidth;
+    screens[name].classList.add('enter');
+    window.scrollTo(0, 0);
+    if (name === 'calm') startBreath(); else stopBreath();
+  }
+
+  function ease(t) { return 0.5 - Math.cos(Math.PI * t) / 2; }
+
+  function tick(now) {
+    var t = ((now - startTime) / 1000) % CYCLE;
+    var scale, phase, left;
+    if (t < IN) {
+      scale = 1 + 0.6 * ease(t / IN);
+      phase = '吸氣'; left = Math.ceil(IN - t);
+    } else {
+      scale = 1.6 - 0.6 * ease((t - IN) / OUT);
+      phase = '吐氣'; left = Math.ceil(CYCLE - t);
+    }
+    ball.style.transform = 'scale(' + scale.toFixed(3) + ')';
+    if (phaseEl.textContent !== phase) {
+      phaseEl.textContent = phase;
+      rIn.classList.toggle('dim', phase !== '吸氣');
+      rOut.classList.toggle('dim', phase !== '吐氣');
+    }
+    secsEl.textContent = left;
+    rafId = requestAnimationFrame(tick);
+  }
+  function startBreath() {
+    if (breathing) return;
+    breathing = true; startTime = performance.now();
+    rafId = requestAnimationFrame(tick);
+  }
+  function stopBreath() { breathing = false; cancelAnimationFrame(rafId); }
+
+  /* 拖曳面具 */
+  var stage = document.getElementById('stage');
+  var head = document.getElementById('head');
+  var mask = document.getElementById('mask');
+  var drag = null;
+  // 面具戴好時，中心點落在頭部圖片的這個相對位置，寬度是頭寬的這個比例
+  var FACE = { x: 0.50, y: 0.67, w: 0.60 };
+
+  function faceTarget() {
+    var s = stage.getBoundingClientRect(), hd = head.getBoundingClientRect();
+    var w = hd.width * FACE.w, hgt = w * 420 / 293;
+    return {
+      left: hd.left - s.left + hd.width * FACE.x - w / 2,
+      top: hd.top - s.top + hd.height * FACE.y - hgt / 2,
+      width: w, s: s
+    };
+  }
+  function putOn() {
+    var t = faceTarget();
+    mask.style.left = (t.left / t.s.width * 100) + '%';
+    mask.style.top = (t.top / t.s.height * 100) + '%';
+    mask.style.width = (t.width / t.s.width * 100) + '%';
+    mask.classList.add('on');
+    mask.classList.remove('snap'); void mask.offsetWidth; mask.classList.add('snap');
+  }
+  mask.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    var s = stage.getBoundingClientRect(), m = mask.getBoundingClientRect();
+    drag = { id: e.pointerId, dx: e.clientX - m.left, dy: e.clientY - m.top };
+    mask.setPointerCapture(e.pointerId);
+    mask.classList.add('dragging');
+    mask.classList.remove('on', 'snap');
+    mask.style.left = (m.left - s.left) + 'px';
+    mask.style.top = (m.top - s.top) + 'px';
+  });
+  mask.addEventListener('pointermove', function (e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var s = stage.getBoundingClientRect();
+    mask.style.left = (e.clientX - s.left - drag.dx) + 'px';
+    mask.style.top = (e.clientY - s.top - drag.dy) + 'px';
+  });
+  function endDrag(e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    drag = null;
+    mask.classList.remove('dragging');
+    var t = faceTarget(), m = mask.getBoundingClientRect(), hd = head.getBoundingClientRect();
+    var mcx = m.left + m.width / 2, mcy = m.top + m.height / 2;
+    var fcx = hd.left + hd.width * FACE.x, fcy = hd.top + hd.height * FACE.y;
+    var near = Math.hypot(mcx - fcx, mcy - fcy) < hd.width * 0.38;
+    if (near) { putOn(); return; }
+    // 沒對準就留在放開的位置（換成百分比，畫面縮放也不會跑掉）
+    mask.style.left = ((m.left - t.s.left) / t.s.width * 100) + '%';
+    mask.style.top = ((m.top - t.s.top) / t.s.height * 100) + '%';
+  }
+  mask.addEventListener('pointerup', endDrag);
+  mask.addEventListener('pointercancel', endDrag);
+  mask.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); putOn(); }
+  });
+
+  /* 期待值拉條 */
+  var TIERS = [
+    { max: 19,  face: '🙄', text: '沒興趣欸（不准選喔）' },
+    { max: 39,  face: '😑', text: '普普通通不期不待' },
+    { max: 59,  face: '😐', text: '感覺還好' },
+    { max: 79,  face: '😊', text: '有點期待！' },
+    { max: 100, face: '😍', text: '迫不及待了啦（給我選喔）' }
+  ];
+  var hope = document.getElementById('hope');
+  var hopeFace = document.getElementById('hope-face');
+  var hopeNum = document.getElementById('hope-num');
+  var hopeText = document.getElementById('hope-text');
+  var answers = { hope: 50 };
+  function updateHope() {
+    var v = +hope.value, tier = TIERS.filter(function (t) { return v <= t.max; })[0];
+    answers.hope = v;
+    hope.style.setProperty('--pct', v + '%');
+    hopeNum.textContent = v;
+    hope.setAttribute('aria-valuetext', v + '%，' + tier.text);
+    if (hopeFace.textContent !== tier.face) {
+      hopeFace.textContent = tier.face;
+      hopeText.textContent = tier.text;
+      hopeFace.classList.remove('bump'); void hopeFace.offsetWidth; hopeFace.classList.add('bump');
+    }
+  }
+  hope.addEventListener('input', updateHope);
+  updateHope();
+
+  document.getElementById('btn-go').addEventListener('click', function () { show('hope'); });
+  document.getElementById('btn-nervous').addEventListener('click', function () { show('calm'); });
+  document.getElementById('btn-calm-go').addEventListener('click', function () { show('hope'); });
+  /* 活動單選 */
+  var chips = document.getElementById('chips');
+  chips.addEventListener('click', function (e) {
+    var c = e.target.closest('.chip');
+    if (!c) return;
+    // 搞笑按鈕：只換字，不會被選取
+    if (c.dataset.joke) { c.textContent = c.dataset.joke; return; }
+    chips.querySelectorAll('.chip[data-v]').forEach(function (b) { b.setAttribute('aria-pressed', b === c ? 'true' : 'false'); });
+    answers.activity = c.dataset.v;
+  });
+
+  document.getElementById('btn-hope-go').addEventListener('click', function () {
+    if (!answers.activity) {
+      chips.classList.remove('shake'); void chips.offsetWidth; chips.classList.add('shake');
+      return;
+    }
+    show('time');
+  });
+
+  /* 出發時間 */
+  var dateEl = document.getElementById('date');
+  var timeEl = document.getElementById('time');
+  var whenEl = document.getElementById('when');
+  var fields = document.getElementById('fields');
+  var WEEK = ['日', '一', '二', '三', '四', '五', '六'];
+  (function () {
+    var d = new Date(), pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    dateEl.min = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  })();
+  function updateWhen() {
+    var dv = dateEl.value, tv = timeEl.value;
+    answers.date = dv; answers.time = tv;
+    if (!dv || !tv) {
+      whenEl.textContent = !dv && !tv ? '選好日期和時間吧' : (!dv ? '還差日期喔' : '還差時間喔');
+      whenEl.classList.remove('ready');
+      return;
+    }
+    var p = dv.split('-'), d = new Date(+p[0], +p[1] - 1, +p[2]);
+    whenEl.textContent = '📅 ' + (+p[1]) + '/' + (+p[2]) + '（' + WEEK[d.getDay()] + '）' + tv + ' 出發！';
+    whenEl.classList.add('ready');
+  }
+  dateEl.addEventListener('input', updateWhen);
+  dateEl.addEventListener('change', updateWhen);
+  timeEl.addEventListener('input', updateWhen);
+  timeEl.addEventListener('change', updateWhen);
+
+  /* 出場方式 */
+  var entranceEl = document.getElementById('entrance');
+  var entranceField = entranceEl.closest('.field');
+  entranceEl.classList.add('empty');
+  entranceEl.addEventListener('change', function () {
+    answers.entrance = entranceEl.value;
+    entranceEl.classList.toggle('empty', !entranceEl.value);
+  });
+
+  function nudge(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+  document.getElementById('btn-time-go').addEventListener('click', function () {
+    var ok = true;
+    if (!dateEl.value || !timeEl.value) { nudge(fields); updateWhen(); ok = false; }
+    if (!entranceEl.value) { nudge(entranceField); ok = false; }
+    if (!ok) return;
+    show('food');
+  });
+
+  /* 想吃什麼（單選） */
+  var foods = document.getElementById('foods');
+  foods.addEventListener('click', function (e) {
+    var c = e.target.closest('.chip');
+    if (!c) return;
+    foods.querySelectorAll('.chip').forEach(function (b) { b.setAttribute('aria-pressed', b === c ? 'true' : 'false'); });
+    answers.food = c.dataset.v;
+    if (c.dataset.v === '都可以') c.innerHTML = '<span class="ico" aria-hidden="true">🙄</span>欠打';
+  });
+  document.getElementById('btn-food-go').addEventListener('click', function () {
+    if (!answers.food) { nudge(foods); return; }
+    startQuiz();
+    show('quiz');
+  });
+
+  /* 通關小測驗：要加題目就往 QUIZ 裡加 */
+  var QUIZ = [
+    {
+      q: '我的生日是幾號？',
+      options: ['0605', '0801', '0623', '0506'],
+      answer: 3
+    },
+    {
+      q: '我是什麼星座？',
+      options: ['水瓶座', '金牛座', '雙魚座', '烈空座'],
+      answer: 1,
+      morph: { 3: '？' }
+    },
+    {
+      q: '我最喜歡什麼？',
+      options: ['棒球', '瑋寶', '蟑螂', '小麥粉精靈'],
+      answer: 0,
+      wrongBy: { 1: '自以為喔！' }
+    },
+    {
+      q: '我是哪裡人？',
+      options: ['士林人', '北投人', '人上人', '神人'],
+      answer: 1,
+      morph: { 3: '？' }
+    },
+    {
+      q: '所以妳到底想吃什麼？',
+      options: ['還是不知道', '火鍋', '牛排', '義大利麵'],
+      answer: 0
+    }
+  ];
+  var qi = 0, quizBusy = false;
+  var quizBody = document.getElementById('quiz-body');
+  var quizPass = document.getElementById('quiz-pass');
+  var quizStep = document.getElementById('quiz-step');
+  var quizDots = document.getElementById('quiz-dots');
+  var quizQ = document.getElementById('quiz-q');
+  var quizOpts = document.getElementById('quiz-opts');
+  var quizMsg = document.getElementById('quiz-msg');
+  var LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+  function startQuiz() {
+    qi = 0; quizBusy = false;
+    quizBody.hidden = false; quizPass.hidden = true;
+    renderQuestion();
+  }
+  function renderQuestion() {
+    var item = QUIZ[qi];
+    quizStep.textContent = '第 ' + (qi + 1) + ' / ' + QUIZ.length + ' 題';
+    quizDots.innerHTML = QUIZ.map(function (_, i) {
+      return '<i class="' + (i < qi ? 'done' : i === qi ? 'now' : '') + '"></i>';
+    }).join('');
+    quizQ.textContent = item.q;
+    quizMsg.textContent = ''; quizMsg.className = 'quiz-msg';
+    quizOpts.innerHTML = '';
+    item.options.forEach(function (text, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'quiz-opt'; b.dataset.i = i;
+      b.innerHTML = '<span class="letter">' + LETTERS[i] + '</span><span></span>';
+      b.lastChild.textContent = text;
+      quizOpts.appendChild(b);
+    });
+  }
+  quizOpts.addEventListener('click', function (e) {
+    var b = e.target.closest('.quiz-opt');
+    if (!b || quizBusy || b.disabled) return;
+    var item = QUIZ[qi], i = +b.dataset.i;
+    if (i === item.answer) {
+      quizBusy = true;
+      b.classList.add('right');
+      quizMsg.textContent = item.right || '';
+      quizMsg.className = 'quiz-msg ok';
+      setTimeout(function () {
+        qi++;
+        if (qi < QUIZ.length) { quizBusy = false; renderQuestion(); return; }
+        quizBody.hidden = true; quizPass.hidden = false;
+        answers.quizPassed = true;
+        setTimeout(function () { if (current === 'quiz') show('code'); }, 1800);
+      }, 1100);
+    } else {
+      b.classList.add('wrong'); b.disabled = true;
+      // 指定的選項選錯後換字（例如烈空座變成問號）
+      if (item.morph && item.morph[i] != null) b.lastChild.textContent = item.morph[i];
+      nudge(b);
+      // 只有指定的選項選錯時才跳出一句話
+      var say = (item.wrongBy && item.wrongBy[i]) || '';
+      quizMsg.textContent = say;
+      quizMsg.className = 'quiz-msg';
+      if (say) { void quizMsg.offsetWidth; quizMsg.className = 'quiz-msg bad pop'; }
+    }
+  });
+  prevBtn.addEventListener('click', function () {
+    if (!history.length) return;
+    var to = history.pop();
+    if (to === 'quiz') startQuiz(); // 從代號頁回去時，測驗重新開始
+    show(to, true);
+  });
+  /* 門票內容 */
+  var FOOD_ICON = { '義大利麵': '🍝', '牛排': '🥩', '牛肉麵': '🍜', '義式料理': '🍕', '泰國料理': '🌶️', '印度料理': '🍛', '日式料理': '🍣', '韓式料理': '🍲', '都可以': '🙄' };
+  function renderTicket() {
+    var set = function (id, text) { document.getElementById(id).textContent = text || '—'; };
+    var tier = TIERS.filter(function (t) { return answers.hope <= t.max; })[0];
+    set('tk-hope', answers.hope + '% ' + tier.face);
+    set('tk-activity', answers.activity);
+    var when = '';
+    if (answers.date) {
+      var p = answers.date.split('-'), d = new Date(+p[0], +p[1] - 1, +p[2]);
+      when = (+p[1]) + '/' + (+p[2]) + '（' + WEEK[d.getDay()] + '）' + (answers.time || '');
+    }
+    set('tk-when', when);
+    set('tk-entrance', answers.entrance);
+    var foodText = answers.food === '都可以' ? '都可以我就是個沒主見的呆瓜' : answers.food;
+    set('tk-food', answers.food ? (FOOD_ICON[answers.food] || '') + ' ' + foodText : '');
+    set('tk-quiz', answers.quizPassed ? QUIZ.length + ' / ' + QUIZ.length + ' 全對 💯' : '');
+    // 門票標題用瑋寶取的行動代號
+    document.getElementById('t-next').textContent = answers.codename || '瑋寶第一次見網友大作戰';
+  }
+
+  /* 行動代號 */
+  var codeEl = document.getElementById('codename');
+  var codeCount = document.getElementById('code-count');
+  var codeField = document.getElementById('code-field');
+  codeEl.addEventListener('input', function () {
+    codeCount.textContent = codeEl.value.length + ' / 20';
+  });
+  function submitCode() {
+    var v = codeEl.value.trim();
+    if (!v) { nudge(codeField); codeEl.focus(); return; }
+    answers.codename = v;
+    codeEl.blur();
+    renderTicket();
+    show('next');
+  }
+  document.getElementById('btn-code-go').addEventListener('click', submitCode);
+  codeEl.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); submitCode(); }
+  });
+
+  /* 生成門票圖片 */
+  var shotBtn = document.getElementById('btn-shot');
+  var shotModal = document.getElementById('shot-modal');
+  var shotImg = document.getElementById('shot-img');
+  shotBtn.addEventListener('click', function () {
+    if (!window.html2canvas) { shotBtn.textContent = '生成失敗，請直接截圖'; return; }
+    shotBtn.disabled = true; shotBtn.textContent = '生成中…';
+    window.html2canvas(document.getElementById('ticket-shot'), {
+      scale: Math.min(3, Math.max(2, window.devicePixelRatio || 1)),
+      backgroundColor: null,
+      onclone: function (doc) {
+        doc.getElementById('ticket-shot').classList.add('capturing');
+        var scr = doc.getElementById('screen-next');
+        if (scr) scr.classList.remove('enter');
+      }
+    }).then(function (canvas) {
+      shotImg.src = canvas.toDataURL('image/png');
+      shotModal.hidden = false;
+      shotBtn.textContent = '生成圖片';
+    }).catch(function () {
+      shotBtn.textContent = '生成失敗，請直接截圖';
+    }).then(function () { shotBtn.disabled = false; });
+  });
+  document.getElementById('shot-close').addEventListener('click', function () { shotModal.hidden = true; });
+  shotModal.addEventListener('click', function (e) { if (e.target === shotModal) shotModal.hidden = true; });
+})();
+</script>
+
+</body>
+</html>
